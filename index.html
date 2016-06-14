@@ -4,17 +4,27 @@
     <meta charset="utf-8" />
     <title>Theremin</title>
     <style>
-        body, html {
+        html, body {
+            height: 100%;
+            margin: 0px;
+        }
+        .main {
             height: 100%;
             cursor: pointer;
-            overflow: hidden;
-            background: #B24592; /* fallback for old browsers */
-            background: -webkit-linear-gradient(to bottom, #B24592 , #F15F79); /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to bottom, #B24592 , #F15F79); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            /*background: #B24592; !* fallback for old browsers *!*/
+            /*background: -webkit-linear-gradient(to bottom, #B24592 , #F15F79); !* Chrome 10-25, Safari 5.1-6 *!*/
+            /*background: linear-gradient(to bottom, #B24592 , #F15F79); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
+            background: url('img/bg.jpg');
+            background-size: cover;
         }
     </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="lib/jquery.ripples.js"></script>
 </head>
 <body>
+<div class="main">
+
+</div>
 <script>
     (function(){
         var context = new AudioContext(),
@@ -24,6 +34,17 @@
                 oscillator = null;
 
         gainNode.connect(context.destination);
+
+        var drawCircle = function (x, y) {
+            circle.style.background = '#f2ed63';
+            circle.style.display = 'block';
+            circle.style.left = x + 'px';
+            circle.style.top = y + 'px';
+            circle.style.position = 'absolute';
+            circle.style.width = '10px';
+            circle.style.height = '10px';
+            circle.style.borderRadius = '50%';
+        };
 
         var calculateFrequency = function (mouseXPosition) {
             var minFrequency = 20,
@@ -78,8 +99,6 @@
             if (mousedown && oscillator) {
                 oscillator.frequency.setTargetAtTime(calculateFrequency(xPos), context.currentTime , 0.001);
                 gainNode.gain.setTargetAtTime(calculateGain(yPos), context.currentTime, 0.001);
-
-                drawCircle(xPos, yPos);
             }
         };
 
@@ -106,7 +125,17 @@
         document.body.addEventListener('touchmove', function (e) {
             changeFrequency(e);
         });
+
+        $('.main').ripples({
+            resolution: 512,
+            dropRadius: 8,
+            perturbance: 0.25,
+            interactive: true
+        });
     })();
+
+
+
 </script>
 </body>
 </html>
